@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screenshot Result</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <h1>Screenshot Result</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Element</th>
+          <th>Screenshot</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (var screenshot of screenshots) { %>
+        <tr>
+          <td><%= screenshot.selector %></td>
+          <td><img src="<%= screenshot.screenshot %>" alt="Screenshot" /></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <br />
+    <a href="/">Back to Home</a>
+  </body>
+</html>

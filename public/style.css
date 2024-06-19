@@ -1,0 +1,45 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  padding: 0;
+  text-align: center;
+}
+
+form {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+input {
+  width: 300px;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  margin-top: 20px;
+}
+
+table tr td,
+table tr th {
+  border: 1px solid #000;
+  padding: 10px;
+}
+
+td img {
+  max-width: 1000px;
+  border: 2px solid #f00;
+  border-radius: 10px;
+}

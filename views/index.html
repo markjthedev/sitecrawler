@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Screenshot</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <h1>Website Screenshot</h1>
+    <form action="/screenshot" method="POST">
+      <label for="url">Website URL:</label>
+      <input type="text" id="url" name="url" required />
+      <!-- <label for="selector">CSS Selector:</label> -->
+      <!-- <input type="text" id="selector" name="selector" required> -->
+      <button type="submit">Get Screenshot</button>
+    </form>
+  </body>
+</html>
