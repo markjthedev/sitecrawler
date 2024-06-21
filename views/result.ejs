@@ -11,16 +11,24 @@
     <table>
       <thead>
         <tr>
-          <th>Element</th>
+          <th>Component</th>
           <th>Screenshot</th>
         </tr>
       </thead>
       <tbody>
         <% for (var screenshot of screenshots) { %>
-        <tr>
-          <td><%= screenshot.selector %></td>
-          <td><img src="<%= screenshot.screenshot %>" alt="Screenshot" /></td>
-        </tr>
+          <% if(screenshot.error){ %>
+            <tr>
+              <td><%= screenshot.selector %></td>
+              <td><%= screenshot.error %></td>
+            </tr>
+          <% } else { %>
+            <tr>
+              <td><%= screenshot.selector %></td>
+              <td><img src="<%= screenshot.screenshot %>" alt="Screenshot" /></td>
+            </tr>
+          <% }%>
+
         <% } %>
       </tbody>
     </table>

@@ -43,3 +43,11 @@ td img {
   border: 2px solid #f00;
   border-radius: 10px;
 }
+.hidden {
+  display: none !important;
+}
+#loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

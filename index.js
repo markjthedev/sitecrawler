@@ -17,111 +17,85 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html'))
 })
 
-// Handle form submission
-app.post('/screenshotsss', async (req, res) => {
-  const { url } = req.body
+ 
 
-  if (!url) {
-    return res.status(400).send('URL is required')
-  }
+// app.post('/screenshot', async (req, res) => {
+//   const url = req.body.url
+//   const browser = await puppeteer.launch()
+//   const page = await browser.newPage()
+//   await page.setViewport({ width: 1920, height: 1080 }) // Set viewport to 1920x1080
 
-  try {
-    const browser = await puppeteer.launch()
-    const page = await browser.newPage()
-    console.log('created page', Date().toLocaleString())
-    await page.goto(url, { waitUntil: 'load', timeout: 0 })
+//   await page.goto(url, { timeout: 0 })
 
-    const html = await page.content()
-    console.log('fetched html', Date().toLocaleString())
-    const $ = cheerio.load(html)
+//   const html = await page.content()
+//   const $ = cheerio.load(html)
 
-    console.log('loaded html', Date().toLocaleString())
-    const elements = []
-    elements.push(...$('section'))
-    elements.push(...$('header'))
-    elements.push(...$('footer'))
-    elements.push(...$('main'))
-    elements.push(...$('div.container'))
+//   const selectors = ['header', 'footer', 'div.section', 'section']
+//   const screenshots = []
 
-    const screenshots = []
+//   for (const selector of selectors) {
+//     try {
+//       await page.waitForSelector(selector, { timeout: 60000 })
+//       const elements = await page.$$(selector)
+//       console.log(page)
+//       for (const element of elements) {
+//         const screenshotBuffer = await element.screenshot()
+//         screenshots.push({
+//           selector,
+//           screenshot: `data:image/png;base64,${screenshotBuffer.toString(
+//             'base64'
+//           )}`,
+//         })
+//       }
+//     } catch (error) {
+//       console.log(`Error taking screenshot for selector ${selector}: ${error}`)
+//     }
+//   }
+//   console.log(screenshots, { screenshots })
+//   await browser.close() // Close the browser instance
 
-    for (const element of elements) {
-      const selector =
-        $(element).prop('tagName').toLowerCase() + $(element).attr('class')
-          ? `[${$(element).prop('tagName').toLowerCase()}${
-              $(element).attr('class')
-                ? '.' + $(element).attr('class').replace(/\s+/g, '.')
-                : ''
-            }]`
-          : $(element).prop('tagName').toLowerCase()
-      let retries = 0
-      while (retries < 3) {
-        try {
-          await page.waitForSelector(selector, { timeout: 30000 })
-          const elementHandle = await page.$(selector)
-          const screenshotBuffer = await elementHandle.screenshot()
-          screenshots.push(
-            `data:image/png;base64,${screenshotBuffer.toString('base64')}`
-          )
-          break
-        } catch (error) {
-          retries++
-          console.log(
-            `Retry ${retries}: Waiting for selector ${selector} timed out`
-          )
-          await new Promise((r) => setTimeout(r, 1000)) // wait for 1 second before retrying
-        }
-      }
-      if (retries === 3) {
-        console.log(
-          `Failed to capture screenshot for selector ${selector} after 3 retries`
-        )
-      }
-    }
-
-    await browser.close()
-
-    res.render('result', { screenshots })
-  } catch (error) {
-    console.error(error)
-    res.status(500).send('An error occurred while taking the screenshots')
-  }
-})
-
+//   res.render('result', { screenshots: screenshots })
+// })
 app.post('/screenshot', async (req, res) => {
   const url = req.body.url
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
+  console.log('created page');
   await page.setViewport({ width: 1920, height: 1080 }) // Set viewport to 1920x1080
+  
+  await page.goto(url, { timeout: 0 })
+  console.log('wentn to url', url);
 
-  await page.goto(url)
-
+  const html = await page.content()
+  const $ = cheerio.load(html)
+  console.log('loaded html in cheerio', $);
+  
   const selectors = ['header', 'footer', 'div.section', 'section']
   const screenshots = []
 
   for (const selector of selectors) {
     try {
-      await page.waitForSelector(selector, { timeout: 30000 })
-      const elements = await page.$$(selector)
-      console.log(page)
+      const elements = await page.$$(`${selector}`)
+      console.log(`Found ${elements.length} elements for selector ${selector}`);
+
       for (const element of elements) {
         const screenshotBuffer = await element.screenshot()
         screenshots.push({
           selector,
-          screenshot: `data:image/png;base64,${screenshotBuffer.toString(
-            'base64'
-          )}`,
+          screenshot: `data:image/png;base64,${screenshotBuffer.toString('base64')}`,
         })
+        console.log('generated image');
       }
     } catch (error) {
       console.log(`Error taking screenshot for selector ${selector}: ${error}`)
     }
   }
-  console.log(screenshots, { screenshots })
   await browser.close() // Close the browser instance
 
   res.render('result', { screenshots: screenshots })
 })
+
+
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
